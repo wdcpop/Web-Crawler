@@ -107,24 +107,15 @@ def get_one_proxy(proxy_type=1):
         "http://reg:noxqofb0@61.158.163.86:16816"
     ]
 
-    if proxy_type == -1:
+    if proxy_type == -1:   # No need for proxy
         return None
 
-    if proxy_type == 1:   # National Stable
+    if proxy_type == 1:   # Visite Chinese website
         pass
-    elif proxy_type == 2:  # Forigen Stable
+    elif proxy_type == 2:  # Visite foreign websites from China
         l = redis.get('kuaidaili_foreign_proxy_list') or '[]'
         proxy_list = json.loads(l)
-    elif proxy_type == 3:   # HK Stable (Vacant)
-        l = redis.get('kuaidaili_foreign_proxy_list') or '[]'
-        proxy_list = json.loads(l)
-    elif proxy_type == 10:    # National Unstable
-        l = redis.get('kuaidaili_proxy_list') or '[]'
-        proxy_list = json.loads(l)
-    elif proxy_type == 20:    #International Unstable
-        l = redis.get('kuaidaili_foreign_proxy_list') or '[]'
-        proxy_list = json.loads(l)
-    elif proxy_type == 99:
+    elif proxy_type == 99:  # testing
         return "http://xduotai.com/wallstreet.pac"
     else:
         pass
@@ -188,6 +179,7 @@ class CrawlerAbstract(BasicCrawler):
                 response = self.frontend_render_fetch(url, {})
                 self.index_page(response)
 
+    #headless browser to crawl JS rendered webpage
     def frontend_render_fetch(self, url, save=None):
         driver = None
         try:
