@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1">
+    <title>光速小分队新后台</title>
+    <link rel="stylesheet" type="text/css" href="./common/antd.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="/dist/index.css"/>-->
+    <style>
+        #react-content {
+            margin: 20px
+        }
+    </style>
+    <script type="text/javascript">
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) {
+                return parts.pop().split(";").shift();
+            }
+        }
+        var globalToken = decodeURIComponent(getCookie("_token"));
+
+        function forbidBackSpace(e) {
+            var cls = e.target.className;
+            var ev = e || window.event; //获取event对象
+            var obj = ev.target || ev.srcElement; //获取事件源
+            var t = obj.type || obj.getAttribute('type'); //获取事件源类型
+            //获取作为判断条件的事件类型
+            var vReadOnly = obj.readOnly;
+            var vDisabled = obj.disabled;
+            //处理undefined值情况
+            vReadOnly = (vReadOnly == undefined) ? false : vReadOnly;
+            vDisabled = (vDisabled == undefined) ? true : vDisabled;
+            //当敲Backspace键时，事件源类型为密码或单行、多行文本的，
+            //并且readOnly属性为true或disabled属性为true的，则退格键失效
+            var flag1 = ev.keyCode == 8 && (t == "password" || t == "text" || t == "textarea" || cls != 'wangEditor-txt') && (vReadOnly == true || vDisabled == true);
+            //当敲Backspace键时，事件源类型非密码或单行、多行文本的，则退格键失效
+            var flag2 = ev.keyCode == 8 && t != "password" && t != "text" && t != "textarea" && t == 'wangEditor-txt';
+            //判断
+            if (flag2 || flag1) return false;
+        }
+        //for fireFox and opera
+        document.onkeypress = forbidBackSpace;
+        //for IE and chrome
+        document.onkeydown = forbidBackSpace;
+
+        window.alert = function (str) {
+            return;
+        };
+    </script>
+</head>
+<body>
+    <div id="react-content"></div>
+    <script src="./dist/bundle.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<div id="navbar" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav navbar-left">
+        <li {% if active==0 %}class="active"{% endif %}><a href="{{ url_for('index') }}" class="navbar-link nav">全部新闻浏览</a></li>
+        <li {% if active==1 %}class="active"{% endif %}><a href="{{ url_for('news_important') }}" class="navbar-link nav">重要版新闻浏览</a></li>
+        <li {% if active==2 %}class="active"{% endif %}><a href="{{ url_for('wechat') }}" class="navbar-link nav">微信浏览</a></li>
+        {% if active==1 %}<li ><button class="btn btn-primary btn-lg" id="btn-setting">重要版筛选设置</button></li>{% endif %}
+        <li ><a class="nav navbar-link" id="crawled" href="javascript:void(0);">爬虫状态</a></li>
+    </ul>
+</div>

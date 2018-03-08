@@ -1,0 +1,16 @@
+body{
+    /*padding-top: 55px;*/
+    /*background-color: #333;*/
+}
+.order{
+    width: 140px;
+    height:140px;
+    border-radius: 12px;
+  }
+.digital{
+    font-size: 50px;
+}
+/*.chart{*/
+    /*min-height: 400px;*/
+    /*min-width:500px;*/
+/*}*/

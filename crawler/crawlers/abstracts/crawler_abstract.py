@@ -104,18 +104,36 @@ def get_one_proxy(proxy_type=1):
     redis = StrictRedis(host='127.0.0.1', port=6379)
 
     proxy_list = [
-        "http://reg:noxqofb0@61.158.163.86:16816"
+        "http://reg:noxqofb0@61.158.163.86:16816",
+        "http://reg:noxqofb0@120.24.68.197:16816",
+        "http://reg:noxqofb0@112.74.206.133:16816",
+        "http://reg:noxqofb0@120.26.167.133:16816",
+        "http://reg:noxqofb0@115.28.102.240:16816",
+        "http://reg:noxqofb0@27.54.242.222:16816",
+        "http://reg:noxqofb0@110.76.185.162:16816",
+        "http://reg:noxqofb0@114.215.140.117:16816",
+        "http://reg:noxqofb0@122.114.137.18:16816",
+        "http://reg:noxqofb0@120.26.160.155:16816"
     ]
 
-    if proxy_type == -1:   # No need for proxy
+    if proxy_type == -1:
         return None
 
-    if proxy_type == 1:   # Visite Chinese website
+    if proxy_type == 1:   # National Stable
         pass
-    elif proxy_type == 2:  # Visite foreign websites from China
+    elif proxy_type == 2:  # Forigen Stable
         l = redis.get('kuaidaili_foreign_proxy_list') or '[]'
         proxy_list = json.loads(l)
-    elif proxy_type == 99:  # testing
+    elif proxy_type == 3:   # HK Stable (Vacant)
+        l = redis.get('kuaidaili_foreign_proxy_list') or '[]'
+        proxy_list = json.loads(l)
+    elif proxy_type == 10:    # National Unstable
+        l = redis.get('kuaidaili_proxy_list') or '[]'
+        proxy_list = json.loads(l)
+    elif proxy_type == 20:    #International Unstable
+        l = redis.get('kuaidaili_foreign_proxy_list') or '[]'
+        proxy_list = json.loads(l)
+    elif proxy_type == 99:
         return "http://xduotai.com/wallstreet.pac"
     else:
         pass
@@ -179,7 +197,6 @@ class CrawlerAbstract(BasicCrawler):
                 response = self.frontend_render_fetch(url, {})
                 self.index_page(response)
 
-    #headless browser to crawl JS rendered webpage
     def frontend_render_fetch(self, url, save=None):
         driver = None
         try:

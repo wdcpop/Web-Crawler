@@ -1,0 +1,17 @@
+DEBUG: False
+LOG_LEVEL: INFO
+
+REDIS_TO_SEND_RESULT:
+    HOST: 127.0.0.1
+    PORT: 6379
+    DB: 0
+    PASS: ~
+
+MONGODB_TO_STORE_RESULT:
+    HOST: mongodb://root:Lobo889_idyl@dds-bp1372501805e1541.mongodb.rds.aliyuncs.com:3717,dds-bp1372501805e1542.mongodb.rds.aliyuncs.com:3717/admin?replicaSet=mgset-1565915
+    MAINDB: newscrawler
+
+FOREIGN_PROXIE: socks5://127.0.0.1:49999
+
+EDITORAI_API: http://106.14.251.78
+EDITORAI_TOKEN: QB8YnKO480h163vRD43b9CJJfKDK39eM

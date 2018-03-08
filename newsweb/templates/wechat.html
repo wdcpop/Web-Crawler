@@ -1,0 +1,172 @@
+{% extends 'base/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <style>
+        .over {
+            overflow-y: auto;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <div class="nav collapse navbar-collapse" id="navbar">
+        <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('index') }}">网站新闻</a></li>
+            <li class="active"><a>微信新闻</a></li>
+        </ul>
+        <h4>测试版,有问题请找刘洋 微信号13229607552,已修复不刷新的问题</h4>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">已关注公众号列表</div>
+                    <div class="panel-body">
+                        <ul id="public-list" class="list-group over">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">文章列表</div>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group over" id="article-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">文章内容</div>
+                    </div>
+                    <div class="panel-body">
+                        <h1 id="title"></h1>
+                        <h3 id="date"></h3>
+                        <a id="link" target="_blank"></a>
+                        <div id="content" class="over"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a style="display: none;" id="base-item" class="list-group-item" href='javascript:void(0);'>
+        <span class="text text-justify"></span>
+        {#        <span class="lasttime btn-primary btn"></span>#}
+        <span class='badge'></span>
+    </a>
+{% endblock %}
+{% block foot %}
+    <script>
+
+        function havenew() {
+            $.ajax('http://120.26.69.90/api/havenew/',
+                    {
+                        dataType:'json',
+                        success:function (data) {
+{#                            console.log(data.code);#}
+                            if (data.code==201){
+                                reload_sourcelist(function () {
+                                    $('#public-list a:eq(0) .badge').text('有新内容,点我刷新');
+                                });
+                            }
+                            setTimeout(havenew,1);
+                        },
+                        error:function () {
+                                    $('#public-list a:eq(0) .badge').text('出错，已经重试链接');
+                            setTimeout(havenew,1000);
+                        }
+                    }
+            );
+        }
+
+        function setContent() {
+            var i = $(this);
+            $('#article-list').find('.active').removeClass('active');
+            i.addClass('active');
+            $.ajax("http://120.26.69.90/api/new/" + i.attr('_id') + "/",
+                    {
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#content').html(data.content);
+                        }
+                    }
+            );
+            $('#title').html(i.attr('title'));
+            $('#link').attr('href', i.attr('link'));
+            $('#link').text('原文链接');
+            $('#date').text(i.attr('date'));
+            {#            $('#content').html(i.attr('content'));#}
+        }
+        function reload_sourcelist(callback) {
+            $.ajax(
+                    'http://120.26.69.90/api/sourcelist',
+                    {
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#public-list').html('');
+                            data.list.map(function (item) {
+                                {#                                console.log(item);#}
+                                var i = $('#base-item').clone();
+                                i.removeAttr('id');
+                                i.removeAttr('style');
+                                i.find('.text').text(item.NickName);
+                                i.find('.badge').text(item.lasttime);
+                                i.attr({'data-link': 'http://120.26.69.90/api/news/?source=' + item.NickName});
+                                i.appendTo("#public-list");
+                                i.on('click', setList2);
+
+                            });
+                            if (callback)callback();
+                        }
+                    }
+            );
+        }
+        function setList2() {
+            var t = $(this);
+            $('#public-list').find('.active').removeClass('active');
+            $('#public-list a:eq(0) .badge').text('');
+            t.addClass('active');
+            var link = t.attr('data-link');
+            $.ajax(link + '&limit=999', {
+                dataType: 'json',
+                success: function (data) {
+                    $('#article-list').html('');
+                    data.data.map(function (item) {
+                        var i = $('#base-item').clone();
+                        i.removeAttr('id');
+                        i.removeAttr('style');
+                        i.css({'min-height': '100px'});
+                        i.find('.text').html(item.title + '</br></br><span class="text-success">' + item.wechatName + "</span>");
+                        i.find('.badge').text(item.humanize);
+                        i.attr('title', item.title);
+                        i.attr('humanize', item.humanize);
+                        i.attr('date', item.date);
+                        i.attr('_id', item._id);
+                        {#                        i.attr('content', item.content);#}
+                        i.attr('link', item.sourceUrl);
+                        {#                        i.attr('summary', item.summary);#}
+                        {#                        i.attr('introduction', item.introduction);#}
+                        i.appendTo('#article-list');
+                        i.on('click', setContent);
+                    });
+                }
+            });
+        }
+        $(document).ready(function () {
+            $('.over').css('height', document.documentElement.clientHeight - 100);
+            reload_sourcelist();
+            setTimeout(havenew,1);
+        });
+
+    </script>
+
+{% endblock %}

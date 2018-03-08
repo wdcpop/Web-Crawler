@@ -1,0 +1,33 @@
+{
+  "name": "NewsCrawlerFront",
+  "version": "1.0.0",
+  "entry": {
+    "index": "./src/index.js"
+  },
+  "description": "NewsCrawler Frontend",
+  "main": "src/index.js",
+  "author": "TomZhu@wallstreetcn",
+  "license": "ISC",
+  "dependencies": {
+    "antd": "^1.8.0",
+    "react": "15.3.x",
+    "react-dom": "15.3.x",
+    "react-router": "^2.8.1",
+    "jquery": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.25.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
+  },
+  "scripts": {
+    "build:dev": "DEV=true webpack",
+    "build:prod": "DEV=false webpack",
+    "dev": "webpack-dev-server --port 8990"
+  }
+}
